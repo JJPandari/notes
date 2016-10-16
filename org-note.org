@@ -1,0 +1,146 @@
+based on: [[http://www.cnblogs.com/Open_Source/archive/2011/07/17/2108747.html]]
+note: key bindings starting with "," only works in spacemacs.
+* TAB cycling
+** TAB current
+** S-TAB global
+* manipulating entry
+** M-j/k move up/down
+** M-h/l promote/demote
+** can select a region and move together
+* insert entry
+** C-RET add one
+** M-RET truncate if at middle of line
+** add S to last 2: insert a todo
+* TODO [#B] Get new laptop                                    :buy:Frys:work:
+DEADLINE <2016-09-30 Fri>
+:PROPERTIES:
+:Effort: 2h
+:Cost: $1300
+:CUSTOM_ID: todo_example
+:END:
+* downward propagation: Inheritance
+** tags
+** properties
+* upward propagation: Accumulation
+** numbers, times, etc...
+* org-goto-calendar
+* capture with remember.el
+* lists
+My favorite scenes are (in this order)
+1. The attack of the Rohirrim
+2) Eowyn's fight with the witch king
+   + this was already my favorite scene in the book
+   + I really like Miranda Otto.
+Important actors in this film are:
+- Elijah Wood :: He plays Frodo
+- Sean Austin :: He plays Sam, Frodo's friend.
+* footnote [1]
+[1] This is a footnote definition.
+* tables
+| start with a vertical bar                         | so you get a table                           |
+|---------------------------------------------------+----------------------------------------------|
+| `cycle` after `bar-`                              | to get a seperator line                      |
+| select "," or " " seperated regions and `C-c bar` | to convert lines to a table                  |
+| `C-c C-c`                                         | format table                                 |
+| `C-c -`                                           | add a seperator line below                   |
+| `C-c RET`                                         | insert a seperator line and another new line |
+| `C-c ^`                                           | sort table according to current column       |
+* links
+:PROPERTIES:
+:CUSTOM_ID: my_target
+:END:
+[[#my_target]]
+[[#todo_example]]
+#+BEGIN_EXAMPLE
+[[link]]
+[[link][desc]]
+[[#my_target]]
+#+END_EXAMPLE
+** C-c l: copy a link in any buffer
+** C-c C-l: insert a link
+** C-c C-l(on a link): modify a link
+** , l: "org-open-at-point"
+* to_do
+** states setup
+#+BEGIN_SRC lisp
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "|" "DONE(d)")
+        (sequence "REPORT(r)" "BUG(b)" "KNOWNCAUSE(k)" "|" "FIXED(f)")
+        (sequence "|" "CANCELED(c)")))
+#+END_SRC
+** specify move when marking sth done
+org-log-done
+org-todo-keywords
+** track sub-todo status
+#+BEGIN_EXAMPLE
+add [/] or [%] to parent
+#+END_EXAMPLE
+** checkboxes won't be included in global todos
+- [ ] a checkbox
+* tags
+** set tags for the whole file
+#+FILETAGS: :org:note:
+** C-c C-q add tag for this
+* properties
+* timestamps
+** usual timestamp <2006-11-01 Wed 19:15>
+** something happens every interval <2007-05-16 Wed 12:30 +1w>
+** sexp-formatted <%%(diary-float t 4 2)> (every 2nd Thursday of the month)
+** interval <2004-08-23 Mon>--<2004-08-26 Thu>
+** inactive [2006-11-01 Wed]
+** C-c . interactively enter a timestamp; twice to make an interval; C-u to add current hour&minute
+** C-c ! same as last keybinding but creates inactive timestamps
+** S-→ adjust timestamp by 1 day
+** S-↑ adjust timestamp by 5 mins
+** C-c C-d add a "deadline" line below this
+** C-c C-s	add a "scheduled" line below this
+** TODO track elapsed time
+*** C-c C-x C-i	clock-in; C-u to choose one from list
+*** C-c C-x C-o	clock-out
+*** C-c C-x C-e	refresh
+*** C-c C-x C-x	cancel current clock
+*** C-c C-x C-j	jump to the ongoing clock; C-u to select from list
+*** C-c C-x C-r	insert a clocktable; C-c C-c to update this one
+* capturing
+** setup cache file and keybinding
+#+BEGIN_SRC elisp
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+(define-key global-map "\C-cc" 'org-capture)
+#+END_SRC
+* text formatting
+** C-c C-x C-f change format (*/_=~+ org-emphasize-alist)
+* agenda view
+** C-c [: add current file to the head of agenda files. To the tail when with u-arg.
+** C-c ]: delete current file from agenda files.
+** C-,: walk through agenda files
+** C-c a: org agenda(interactive for the next key)
+*** a: agenda in calendar style
+*** t: todo-list
+*** m: match tags
+*** L: timeline view of current file (all entries with a timestamp). with u-arg also show undone todos
+*** s: search for keywords
+*** match syntax: work|laptop+night-boss means work or (laptop and night not boss)
+** key bindings in agenda view
+*** TAB: show source of this entry in other window
+*** o: delete other windows
+*** d/w: switch to day/week view
+*** f/b: step forward/back according to current view time span
+*** .: go to today
+*** j: go to some day
+*** l: logbook mode
+*** r or g: refresh agenda
+*** s: save all org-mode buffers
+*** \: filter
+**** TODO how to use this?
+** remote edit in agenda view
+*** C-k: delete this entry and its children
+*** C-c C-w: transfer current entry
+**** TODO what's this?
+*** a: archive current entry, asking
+*** $: archive without asking
+*** C-c C-s: schedule an entry, with u-arg delete the schedule time
+*** C-c C-d: set deadline, with u-arg delete deadline
+*** S-←/S-→: inc/dec this timestamp
+*** I: start counting time for this
+*** O/X: pause/cancel current counting down
+*** J: jump to current counting down in other window
